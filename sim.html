@@ -25,7 +25,7 @@ const setX=x=>pack.forEach((n,i)=>n.position.x=base[i]+(x-X0)*U);
 const flash=k=>v.nodesOf("meat").forEach(n=>n.traverse(e=>{if(e.isMesh&&e.material.emissive){e.material.emissive.setRGB(k,k,k)}}));
 v.setOpacity("tunnel",.14);
 document.getElementById("xt").onchange=e=>v.setOpacity("tunnel",e.target.checked?.14:1);document.getElementById("xc").onchange=e=>v.setOpacity("control",e.target.checked?.14:1);
-v.ctl.autoRotate=false;v.cam.position.set(1.2,.55,1.5);
+v.ctl.autoRotate=false;v.ctl.target.set(0,-.16,0);v.cam.position.set(1.15,.4,1.45);
 let play=true,spd=1,t=0,idx=0,last=performance.now(),cyc=0;
 const pp=document.getElementById("pp"),sp=document.getElementById("sp");
 pp.onclick=()=>{play=!play;pp.textContent=play?"⏸ หยุด":"▶ เล่น"};sp.onclick=()=>{spd=spd===1?2:spd===2?.5:1;sp.textContent="เร็ว ×"+spd};
