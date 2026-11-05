@@ -2,7 +2,7 @@
 import csv, html, json, os
 H = os.path.dirname(os.path.abspath(__file__))
 E = html.escape
-NAV = [('index.html', 'เครื่อง'), ('model.html', 'โมเดล 3 มิติ'), ('how.html', 'การทำงาน'), ('build.html', 'สร้างเอง'), ('learn.html', 'งานวิจัย'), ('judges.html', 'สำหรับกรรมการ')]
+NAV = [('index.html', 'เครื่อง'), ('model.html', 'โมเดล 3 มิติ'), ('sim.html', 'จำลองการทำงาน'), ('how.html', 'การทำงาน'), ('build.html', 'สร้างเอง'), ('learn.html', 'งานวิจัย'), ('judges.html', 'สำหรับกรรมการ')]
 def page(fn, title, body, desc='', extra_head='', script=''):
     links = ''.join(f'<a href="{h}">{t}</a>' for h, t in NAV)
     out = f'''<!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -60,6 +60,8 @@ mlist = ''.join(f'<label><input type="checkbox" data-k="{m["key"]}" checked>{E(m
 page('model.html', 'โมเดล 3 มิติ — สถานีตรวจเนื้อ', f'''
 <section style="padding-top:30px"><div class="wrap"><h2>โมเดล 3 มิติ</h2><p class="sub">แปลงจากไฟล์ STEP ของ Fusion 360 ลากเพื่อหมุน เลื่อนล้อเมาส์เพื่อซูม ติ๊กเพื่อซ่อน/แสดงแต่ละส่วน</p>
 <div class="split"><div class="mods" id="mods"><b style="padding:6px 10px;display:block">ส่วนประกอบ</b>{mlist}
+<div style="padding:8px 10px;border-top:1px solid var(--line)"><b style="font-size:14px">โปร่งใส (มองทะลุ)</b>
+<label style="padding:6px 0"><input type="checkbox" id="xt">อุโมงค์ปิดแสง</label><label style="padding:6px 0"><input type="checkbox" id="xc">กล่องควบคุม</label><label style="padding:6px 0"><input type="checkbox" id="xa">ทั้งหมด (X-ray)</label></div>
 <div style="padding:8px 10px"><button class="btn ghost" id="solo" style="padding:8px 14px;font-size:14px">แสดงทั้งหมด</button></div>
 <div style="padding:8px 10px;font-size:13px;color:var(--muted)">แผ่นอะคริลิกโปร่งใส · ชิ้นส่วนบางตัว (E-stop, ช่อง C14, PSU, ไดรเวอร์) เป็นรูปทรงทั่วไป ยังไม่ปรับตามสินค้าจริง</div></div>
 <div class="v3d tall" id="v"><div class="ld" id="ld">กำลังโหลดโมเดล 3 มิติ (6.6 MB)…</div></div></div>
@@ -67,6 +69,9 @@ page('model.html', 'โมเดล 3 มิติ — สถานีตรว�
  '', IMP, '''<script type="module">import{mount}from"./viewer3d.js";const ld=document.getElementById("ld");
 mount(document.getElementById("v"),{auto:false,onProgress:p=>ld.textContent="กำลังโหลด "+Math.round(p*100)+"%"}).then(v=>{ld.remove();
 document.querySelectorAll("#mods input").forEach(i=>i.onchange=()=>v.setVisible(i.dataset.k,i.checked));
+const xr=(keys,on)=>keys.forEach(k=>v.setOpacity(k,on?0.14:1));
+document.getElementById("xt").onchange=e=>xr(["tunnel"],e.target.checked);document.getElementById("xc").onchange=e=>xr(["control"],e.target.checked);
+document.getElementById("xa").onchange=e=>{xr(["frame","conveyor","drive","tunnel","sensing","control"],e.target.checked);document.getElementById("xt").checked=document.getElementById("xc").checked=e.target.checked};
 document.getElementById("solo").onclick=()=>document.querySelectorAll("#mods input").forEach(i=>{i.checked=true;v.setVisible(i.dataset.k,true)})}).catch(()=>ld.textContent="โหลดโมเดลไม่ได้ ลองรีเฟรช")</script>''')
 
 # ---------------------------------------------------------------- how
@@ -153,4 +158,46 @@ page('judges.html', 'สำหรับกรรมการ', '''
 <h2 id="limits" style="margin-top:40px">ข้อจำกัดที่ต้องรู้</h2>
 <div class="note"><p><b>ภาพและโมเดล 3 มิติ</b> สร้างจากแบบ CAD ไม่ใช่เครื่องจริง</p><p><b>ส่วนประกอบทั่วไป</b> E-stop ช่อง C14 PSU ไดรเวอร์ มอเตอร์ ใช้ขนาดจากข้อมูลผู้ขายหรือรูปทรงมาตรฐาน ต้องวัดของจริงก่อนพิมพ์ขายึดและเจาะ</p><p><b>ยังไม่ได้ทดสอบ</b> PID ต้องจูน ปรับเทียบ counts/มม. ตั้งโฟกัสกล้องที่ ~15 ซม. เว็บแคมส่วนใหญ่มีฟิลเตอร์ตัด IR ทำให้แถบ NIR 850 มืด ต้องใช้กล้องที่ไม่มี IR-cut</p><p><b>เสียงพากย์ในคลิป</b> เป็นเสียงสังเคราะห์</p></div>
 </div></section>''', 'สรุปโครงงานสำหรับกรรมการ: สิ่งที่ทำแล้ว ความแม่นยำ และข้อจำกัด')
+
+# ---------------------------------------------------------------- sim
+page('sim.html', 'จำลองการทำงาน — สถานีตรวจเนื้อ', """
+<section style="padding-top:30px"><div class="wrap"><h2>จำลองการทำงาน</h2><p class="sub">แพ็กเนื้อวิ่งเข้าอุโมงค์ หยุดใต้กล้อง หยุดใต้เซนเซอร์ แล้วออกจากสายพาน ตามลำดับที่ firmware ตั้งไว้ (FEED → TO_CAM → AT_CAM → TO_SEN → AT_SEN → CLEAR)</p>
+<div class="split" style="grid-template-columns:1fr 300px">
+<div class="v3d tall" id="v"><div class="ld" id="ld">กำลังโหลดโมเดล 3 มิติ…</div>
+<div id="hud" style="position:absolute;right:10px;top:10px;background:color-mix(in srgb,var(--panel) 90%,transparent);border:1px solid var(--line);border-radius:14px;padding:10px 14px;font-size:13px;min-width:190px;display:none"></div></div>
+<div class="mods"><b style="padding:6px 10px;display:block">ขั้นตอน</b><div id="stp"></div>
+<div style="padding:8px 10px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn go" id="pp" style="padding:8px 16px;font-size:14px">⏸ หยุด</button><button class="btn ghost" id="sp" style="padding:8px 16px;font-size:14px">เร็ว ×1</button></div>
+<div style="padding:4px 10px"><label style="padding:4px 0"><input type="checkbox" id="xt" checked>มองทะลุอุโมงค์</label><label style="padding:4px 0"><input type="checkbox" id="xc">มองทะลุกล่องควบคุม</label></div>
+<div style="padding:8px 10px;font-size:12.5px;color:var(--muted)">ค่าที่แสดงเป็น <b>ตัวอย่างจำลอง</b> ไม่ใช่ผลวัดจริง การเคลื่อนที่จำลองจากลำดับในเฟิร์มแวร์ ไม่ใช่ข้อมูลจากเครื่องจริง</div></div></div></div></section>""",
+ '', IMP, r"""<script type="module">import{mount}from"./viewer3d.js";
+const ld=document.getElementById("ld"),hud=document.getElementById("hud"),stp=document.getElementById("stp");
+const PH=[["FEED","สายพานวิ่งช้า ตรวจพบถาด (IR)",2.0],["AT_CAM","หยุดใต้กล้อง ถ่ายภาพ ขาว / NIR / UV",3.2],["TO_SEN","เลื่อนไปใต้เซนเซอร์",1.3],["AT_SEN","อ่าน AS7341 / MLX90614 / MQ-137",2.2],["CLEAR","ปล่อยถาดออกจากสายพาน",2.4]];
+stp.innerHTML=PH.map((p,i)=>`<div class="sl" data-i="${i}" style="padding:7px 10px;border-radius:10px;font-size:14px"><b>${p[0]}</b><br><span style="color:var(--muted)">${p[1]}</span></div>`).join("");
+const DEMO=[{m:11.8,L:43.1,a:22.4,b:11.0,t:3.8,s:"ok"},{m:19.5,L:40.2,a:24.9,b:12.3,t:4.1,s:"ok"},{m:6.4,L:37.6,a:18.2,b:10.1,t:8.9,s:"watch"}];
+mount(document.getElementById("v"),{auto:false,onProgress:p=>ld.textContent="กำลังโหลด "+Math.round(p*100)+"%"}).then(v=>{ld.remove();
+const U=v.unit,pack=v.nodesOf("meat"),base=pack.map(n=>n.position.x);const X0=175;
+const setX=x=>pack.forEach((n,i)=>n.position.x=base[i]+(x-X0)*U);
+const flash=k=>v.nodesOf("meat").forEach(n=>n.traverse(e=>{if(e.isMesh&&e.material.emissive){e.material.emissive.setRGB(k,k,k)}}));
+v.setOpacity("tunnel",.14);
+document.getElementById("xt").onchange=e=>v.setOpacity("tunnel",e.target.checked?.14:1);document.getElementById("xc").onchange=e=>v.setOpacity("control",e.target.checked?.14:1);
+v.ctl.autoRotate=false;v.cam.position.set(1.2,.55,1.5);
+let play=true,spd=1,t=0,idx=0,last=performance.now(),cyc=0;
+const pp=document.getElementById("pp"),sp=document.getElementById("sp");
+pp.onclick=()=>{play=!play;pp.textContent=play?"⏸ หยุด":"▶ เล่น"};sp.onclick=()=>{spd=spd===1?2:spd===2?.5:1;sp.textContent="เร็ว ×"+spd};
+const ease=k=>k<0?0:k>1?1:k*k*(3-2*k);
+function hudHtml(ph,k){const d=DEMO[cyc%3];let h=`<b>แพ็ก #${cyc+1}</b> <span class="pill">ตัวอย่างจำลอง</span><br>`;
+if(ph===1){h+=k<.45?"แสงขาว…":k<.7?"NIR 850…":k<.9?"UV 365…":"วิเคราะห์ภาพ…";if(k>.9)h+=`<br>marbling ≈ ${d.m}% · L* ${d.L} a* ${d.a} b* ${d.b}`}
+else if(ph===3){h+=k<.6?"กำลังอ่านเซนเซอร์…":`อุณหภูมิผิว ${d.t} °C`;}
+else if(ph===4){h+=`marbling ≈ ${d.m}% · สถานะ <span class="pill ${d.s==="ok"?"g":"y"}">${d.s}</span>`}
+else h+="รอตรวจ…";return h}
+function step(now){requestAnimationFrame(step);const dt=Math.min(.1,(now-last)/1000);last=now;if(play)t+=dt*spd;
+let a=t,ph=0;for(;ph<PH.length;ph++){if(a<PH[ph][2])break;a-=PH[ph][2]}
+if(ph>=PH.length){t=0;cyc++;ph=0;a=0}
+const k=a/PH[ph][2];let x;
+if(ph===0)x=95+80*ease(k);else if(ph===1)x=175;else if(ph===2)x=175+65*ease(k);else if(ph===3)x=240;else x=240+170*ease(k);
+setX(x);flash(ph===1?(.12+.1*Math.sin(now/90)):0);
+hud.style.display="block";hud.innerHTML=hudHtml(ph,k);
+stp.querySelectorAll(".sl").forEach((e,i)=>{e.style.background=i===ph?"var(--panel2)":"";e.style.outline=i===ph?"2px solid var(--accent)":""});}
+requestAnimationFrame(step);}).catch(()=>ld.textContent="โหลดโมเดลไม่ได้ ลองรีเฟรช")</script>""")
+
 print('pages ok')

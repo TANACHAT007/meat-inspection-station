@@ -4,10 +4,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="site.css"><script src="site.js"></script><script type="importmap">{"imports":{"three":"./vendor/three.module.min.js"}}</script></head><body>
 <nav><div class="wrap"><a class="brand" href="index.html"><span class="logo">🥩</span>Meat Inspection Station</a>
-<div class="links" id="links"><a href="index.html">เครื่อง</a><a href="model.html">โมเดล 3 มิติ</a><a href="how.html">การทำงาน</a><a href="build.html">สร้างเอง</a><a href="learn.html">งานวิจัย</a><a href="judges.html">สำหรับกรรมการ</a><button class="tbtn" id="tbtn" aria-label="สลับโหมดมืด">◐</button></div><button class="mbtn" id="mbtn" aria-label="เมนู">☰</button></div></nav>
+<div class="links" id="links"><a href="index.html">เครื่อง</a><a href="model.html">โมเดล 3 มิติ</a><a href="sim.html">จำลองการทำงาน</a><a href="how.html">การทำงาน</a><a href="build.html">สร้างเอง</a><a href="learn.html">งานวิจัย</a><a href="judges.html">สำหรับกรรมการ</a><button class="tbtn" id="tbtn" aria-label="สลับโหมดมืด">◐</button></div><button class="mbtn" id="mbtn" aria-label="เมนู">☰</button></div></nav>
 
 <section style="padding-top:30px"><div class="wrap"><h2>โมเดล 3 มิติ</h2><p class="sub">แปลงจากไฟล์ STEP ของ Fusion 360 ลากเพื่อหมุน เลื่อนล้อเมาส์เพื่อซูม ติ๊กเพื่อซ่อน/แสดงแต่ละส่วน</p>
 <div class="split"><div class="mods" id="mods"><b style="padding:6px 10px;display:block">ส่วนประกอบ</b><label><input type="checkbox" data-k="frame" checked>โครงอะลูมิเนียม 2020<small>9k</small></label><label><input type="checkbox" data-k="conveyor" checked>สายพานและลูกกลิ้ง<small>45k</small></label><label><input type="checkbox" data-k="drive" checked>ชุดขับมอเตอร์<small>20k</small></label><label><input type="checkbox" data-k="tunnel" checked>อุโมงค์ปิดแสงและไฟ<small>33k</small></label><label><input type="checkbox" data-k="sensing" checked>กล้องและเซนเซอร์<small>32k</small></label><label><input type="checkbox" data-k="control" checked>กล่องควบคุมและไฟเข้า<small>145k</small></label><label><input type="checkbox" data-k="meat" checked>แพ็กเนื้อวัว<small>0k</small></label>
+<div style="padding:8px 10px;border-top:1px solid var(--line)"><b style="font-size:14px">โปร่งใส (มองทะลุ)</b>
+<label style="padding:6px 0"><input type="checkbox" id="xt">อุโมงค์ปิดแสง</label><label style="padding:6px 0"><input type="checkbox" id="xc">กล่องควบคุม</label><label style="padding:6px 0"><input type="checkbox" id="xa">ทั้งหมด (X-ray)</label></div>
 <div style="padding:8px 10px"><button class="btn ghost" id="solo" style="padding:8px 14px;font-size:14px">แสดงทั้งหมด</button></div>
 <div style="padding:8px 10px;font-size:13px;color:var(--muted)">แผ่นอะคริลิกโปร่งใส · ชิ้นส่วนบางตัว (E-stop, ช่อง C14, PSU, ไดรเวอร์) เป็นรูปทรงทั่วไป ยังไม่ปรับตามสินค้าจริง</div></div>
 <div class="v3d tall" id="v"><div class="ld" id="ld">กำลังโหลดโมเดล 3 มิติ (6.6 MB)…</div></div></div>
@@ -15,4 +17,7 @@
 <footer><div class="wrap">โครงงานสถานีตรวจคุณภาพเนื้อวัวบนสายพาน · ออกแบบด้วย Fusion 360 · ภาพและโมเดล 3 มิติสร้างจากแบบ CAD ไม่ใช่ภาพถ่ายของจริง · ข้อมูลอัปเดต 5 พ.ย. 2569 · <a href="judges.html#limits" style="text-decoration:underline">ข้อจำกัด</a></div></footer><script type="module">import{mount}from"./viewer3d.js";const ld=document.getElementById("ld");
 mount(document.getElementById("v"),{auto:false,onProgress:p=>ld.textContent="กำลังโหลด "+Math.round(p*100)+"%"}).then(v=>{ld.remove();
 document.querySelectorAll("#mods input").forEach(i=>i.onchange=()=>v.setVisible(i.dataset.k,i.checked));
+const xr=(keys,on)=>keys.forEach(k=>v.setOpacity(k,on?0.14:1));
+document.getElementById("xt").onchange=e=>xr(["tunnel"],e.target.checked);document.getElementById("xc").onchange=e=>xr(["control"],e.target.checked);
+document.getElementById("xa").onchange=e=>{xr(["frame","conveyor","drive","tunnel","sensing","control"],e.target.checked);document.getElementById("xt").checked=document.getElementById("xc").checked=e.target.checked};
 document.getElementById("solo").onclick=()=>document.querySelectorAll("#mods input").forEach(i=>{i.checked=true;v.setVisible(i.dataset.k,true)})}).catch(()=>ld.textContent="โหลดโมเดลไม่ได้ ลองรีเฟรช")</script></body></html>
