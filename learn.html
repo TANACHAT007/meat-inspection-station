@@ -1,0 +1,29 @@
+<!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>งานวิจัยที่ใช้ — ตรวจคุณภาพเนื้อ</title><meta name="description" content="งานวิจัยวิธีตรวจคุณภาพเนื้อแบบใหม่ที่ใช้กับโครงงาน"><meta name="theme-color" content="#c2303f">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css"><script src="site.js"></script></head><body>
+<nav><div class="wrap"><a class="brand" href="index.html"><span class="logo">🥩</span>Meat Inspection Station</a>
+<div class="links" id="links"><a href="index.html">เครื่อง</a><a href="model.html">โมเดล 3 มิติ</a><a href="how.html">การทำงาน</a><a href="build.html">สร้างเอง</a><a href="learn.html">งานวิจัย</a><a href="judges.html">สำหรับกรรมการ</a><button class="tbtn" id="tbtn" aria-label="สลับโหมดมืด">◐</button></div><button class="mbtn" id="mbtn" aria-label="เมนู">☰</button></div></nav>
+
+<section style="padding-top:30px"><div class="wrap"><h2>วิธีตรวจคุณภาพเนื้อแบบใหม่ ๆ ที่ค้นมา</h2><p class="sub">ค้นเมื่อ 4 พ.ย. 2569 อ่านจากบทคัดย่อและหน้าสรุปเท่านั้น ยังไม่ได้อ่านฉบับเต็ม ตัวเลขความแม่นยำมาจากคนละชุดข้อมูล เทียบกันตรง ๆ ไม่ได้ และยังไม่ได้ทดสอบกับเนื้อของโครงงานนี้</p>
+<div class="tw"><table><tr><th>วิธี</th><th>ต้นทุน</th><th>การตัดสินใจ</th></tr>
+<tr><td>Multi-waveband LED + กล้องธรรมดา (Applied Sciences 2019)</td><td>ต่ำ</td><td><span class="pill g">เลือก</span> ไฟขาว + NIR 850 + UV 365</td></tr>
+<tr><td>เซนเซอร์สเปกตรัม AS7341 (Biosensors 2022 เนื้อหมู)</td><td>ต่ำ</td><td><span class="pill g">เลือก</span> เก็บเป็น feature ต้องสร้าง calibration เอง</td></tr>
+<tr><td>ฟิล์ม/อาร์เรย์สี (colorimetric) อ่านด้วยกล้อง</td><td>ต่ำมาก</td><td><span class="pill g">เลือก</span> ฟิล์มกะหล่ำม่วง ให้ค่าสีเท่านั้น</td></tr>
+<tr><td>Computer vision สี + marbling (MSENet, SegFormer, YOLOv8)</td><td>ต่ำ</td><td><span class="pill g">เลือก</span> ใช้วิธีดั้งเดิม (Lab + Otsu) ก่อน แล้วค่อยต่อยอด</td></tr>
+<tr><td>Thermal IR จุดเดียว MLX90614</td><td>ต่ำ</td><td><span class="pill g">เลือก</span> อุณหภูมิผิว</td></tr>
+<tr><td>แก๊ส MQ-137 / e-nose</td><td>ต่ำ</td><td><span class="pill y">ทดลอง</span> ไวต่อชื้นและอุณหภูมิ ต้องปรับเทียบ</td></tr>
+<tr><td>Structured-illumination (SIRI)</td><td>กลาง</td><td><span class="pill y">ต่อยอด</span> เกินงบ</td></tr>
+<tr><td>Electrical impedance (EIS)</td><td>กลาง</td><td><span class="pill y">ต่อยอด</span> ต้องแตะเนื้อ</td></tr>
+<tr><td>Hyperspectral imaging (HSI)</td><td>สูงมาก</td><td><span class="pill r">ไม่ใช้</span> เกินงบ</td></tr>
+<tr><td>Raman / NIRS / Terahertz</td><td>สูง</td><td><span class="pill r">ไม่ใช้</span> เกินงบ</td></tr></table></div>
+<h2 style="margin-top:44px">ตัวชี้วัดต่อแพ็กที่เครื่องรายงาน</h2><ol class="steps"><li><b>Marbling %</b> พื้นที่ไขมัน ÷ พื้นที่กล้ามเนื้อ และเกรด 3 ระดับ (ยังไม่ validate)</li><li><b>สีเนื้อ L*a*b*</b> จากภาพโพลาไรซ์ไขว้และแผ่นอ้างอิง</li><li><b>ดัชนีสีฟิล์มกะหล่ำ</b> ตารางสี→สถานะต้องปรับเทียบเอง</li><li><b>สเปกตรัม 11 ช่อง + ภาพ NIR/UV</b> เก็บเป็น feature สำหรับโมเดล</li><li><b>อุณหภูมิผิว + แนวโน้มแก๊ส NH₃</b></li><li><b>สถานะรวม</b> ok / watch / alarm ไม่ใช่การรับรองความปลอดภัยอาหาร</li></ol>
+<div class="note" style="margin-top:20px"><b>ข้อควรระวังจากงานวิจัย</b> Computer vision ทำนาย pH ได้ไม่ดี (R² ≈ 0.32) จึงไม่รายงาน pH ตัวเลขของ HSI/สเปกตรัมมาจากเครื่องห้องแล็บที่ปรับเทียบกับ TVB-N เซนเซอร์ราคาถูกของโครงงานต้องสร้างการปรับเทียบเอง</div>
+<h2 style="margin-top:44px">แหล่งอ้างอิง</h2><p class="sub">บทคัดย่อ/หน้าสรุป</p><ul style="color:var(--muted)">
+<li><a style="text-decoration:underline" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12681067/" target="_blank" rel="noopener">รีวิว HSI (PMC12681067)</a></li>
+<li><a style="text-decoration:underline" href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9688451/" target="_blank" rel="noopener">AS7341 ความสดเนื้อหมู (Biosensors 2022)</a></li>
+<li><a style="text-decoration:underline" href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11731488/" target="_blank" rel="noopener">Colorimetric/fluorescent arrays</a></li>
+<li><a style="text-decoration:underline" href="https://agris.fao.org/search/zh/records/64747d4b2d3f560f80afa255" target="_blank" rel="noopener">Multi-waveband LED (Applied Sciences 2019)</a></li></ul>
+</div></section>
+<footer><div class="wrap">โครงงานสถานีตรวจคุณภาพเนื้อวัวบนสายพาน · ออกแบบด้วย Fusion 360 · ภาพและโมเดล 3 มิติสร้างจากแบบ CAD ไม่ใช่ภาพถ่ายของจริง · ข้อมูลอัปเดต 5 พ.ย. 2569 · <a href="judges.html#limits" style="text-decoration:underline">ข้อจำกัด</a></div></footer></body></html>
