@@ -1,6 +1,6 @@
 // Meat inspection belt station — ESP32 firmware (ESP32-DevKitC, Arduino-ESP32 core 3.x)
 // COMPACT demo belt: the belt only moves while a tray is being processed; after CLEAR it stops and waits (pick the tray up at the exit, then load the next).
-// Belt: 12 V DC right-angle worm gearmotor with Hall quadrature encoder (JGY-370 class, ~66 rpm, self-locking) + Cytron MD13S driver (PWM + DIR) on a Ø32 roller;
+// Belt: 12 V DC right-angle worm gearmotor with Hall quadrature encoder (JGY-370 class, ~66 rpm, self-locking) + BTS7960 (IBT-2 type) driver (RPWM + LPWM, R_EN/L_EN tied to 5 V) on a Ø32 roller;
 // position comes from the encoder (closed loop), there is no stepper.  Station sequence (stop-and-capture):
 //   FEED (belt runs slowly) → IR sees the tray → advance D_CAM → AT_CAM (host captures the images) → advance D_SEN → AT_SEN (read AS7341 / MLX90614 / MQ-137)
 //   → advance D_CLEAR (tray leaves the tunnel) → FEED
@@ -18,8 +18,8 @@
 enum State { S_IDLE, S_FEED, S_TO_CAM, S_AT_CAM, S_TO_SEN, S_AT_SEN, S_CLEAR, S_ESTOP };
 
 // ------------------------------------------------------------------ pins (ESP32-DevKitC)
-static const int PIN_PWM = 26;       // Cytron MD13S PWM (20 kHz max)
-static const int PIN_DIR = 27;       // Cytron MD13S DIR
+static const int PIN_PWM = 26;       // BTS7960 RPWM (forward, 20 kHz)
+static const int PIN_DIR = 27;       // BTS7960 LPWM (reverse, 20 kHz)
 static const int PIN_ENC_A = 13;     // motor Hall encoder A (power the encoder from 3V3, NOT from the motor supply)
 static const int PIN_ENC_B = 14;     // motor Hall encoder B
 static const int PIN_IR = 34;        // E18-D80NK open-collector output + 10 k pull-up to 3V3 (input-only pin), LOW = object present
@@ -72,17 +72,19 @@ static uint32_t settle_ms = 0, stall_ms = 0;
 static int32_t pos_last = 0;
 static volatile float last_duty = 0;
 
+static inline void motorStop() { ledcWrite(PIN_PWM, 0); ledcWrite(PIN_DIR, 0); }
+
 static void motorWrite(float u) {          // u: signed duty, -1023..1023
   last_duty = u;
   float m = fabsf(u);
-  if (m < 1) { ledcWrite(PIN_PWM, 0); return; }
+  if (m < 1) { motorStop(); return; }
   m = constrain(m + DUTY_MIN, 0.0f, 1023.0f);
-  digitalWrite(PIN_DIR, u >= 0 ? HIGH : LOW);
-  ledcWrite(PIN_PWM, (uint32_t)m);
+  ledcWrite(u >= 0 ? PIN_DIR : PIN_PWM, 0);               // opposite half-bridge off first
+  ledcWrite(u >= 0 ? PIN_PWM : PIN_DIR, (uint32_t)m);
 }
 
 static void ctlCallback(void *) {          // runs every 1 ms
-  if (!motor_on) { ledcWrite(PIN_PWM, 0); return; }
+  if (!motor_on) { motorStop(); return; }
   const float dt = 0.001f;
   int32_t pos = enc_count;
   if (moving) {
@@ -110,7 +112,7 @@ static void ctlCallback(void *) {          // runs every 1 ms
     if (++settle_ms > 80) { moving = false; settle_ms = 0; i_term = 0; }
   } else settle_ms = 0;
   // stall guard: high command but the encoder does not move for 0.8 s
-  if (moving && fabsf(last_duty) > 450 && abs(pos - pos_last) < 4) { if (++stall_ms > 800) { stalled = true; moving = false; motor_on = false; ledcWrite(PIN_PWM, 0); } }
+  if (moving && fabsf(last_duty) > 450 && abs(pos - pos_last) < 4) { if (++stall_ms > 800) { stalled = true; moving = false; motor_on = false; motorStop(); } }
   else stall_ms = 0;
   if ((ets_get_cpu_frequency() > 0) && (esp_timer_get_time() & 0x3FF) == 0) pos_last = pos;   // sample ~ every 1 ms-ish window
 }
@@ -130,7 +132,7 @@ static void stopMove() {
   moving = false; run_forever = false;
   tgt_vel = 0; tgt_pos = enc_count;                  // hold where we are
 }
-static void motorEnable(bool on) { motor_on = on; if (!on) ledcWrite(PIN_PWM, 0); }
+static void motorEnable(bool on) { motor_on = on; if (!on) motorStop(); }
 
 // ------------------------------------------------------------------ sensors
 static Adafruit_AS7341 as7341;
@@ -233,9 +235,9 @@ static void handleCommand(String cmd) {
 
 void setup() {
   Serial.begin(115200);
-  pinMode(PIN_DIR, OUTPUT);
   ledcAttach(PIN_PWM, 20000, 10);
-  ledcWrite(PIN_PWM, 0);
+  ledcAttach(PIN_DIR, 20000, 10);
+  motorStop();
   pinMode(PIN_ENC_A, INPUT_PULLUP); pinMode(PIN_ENC_B, INPUT_PULLUP);
   enc_prev = (digitalRead(PIN_ENC_A) << 1) | digitalRead(PIN_ENC_B);
   attachInterrupt(digitalPinToInterrupt(PIN_ENC_A), encISR, CHANGE);

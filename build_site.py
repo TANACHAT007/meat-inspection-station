@@ -39,7 +39,7 @@ page('index.html', 'สถานีตรวจคุณภาพเนื้อ
 <div class="card feat"><div class="ic">🥩</div><h3>วัด marbling และสีเนื้อ</h3><p>แยกไขมันจากกล้ามเนื้อด้วยสี Lab คำนวณ % ไขมันแทรก สี L*a*b* และอัตราส่วนสีน้ำตาล</p></div>
 <div class="card feat"><div class="ic">🧪</div><h3>สัญญาณเสริม</h3><p>สเปกตรัมจุด AS7341 อุณหภูมิผิว MLX90614 แก๊ส MQ-137 และฟิล์มกะหล่ำม่วงบ่งชี้ความสด</p></div>
 <div class="card feat"><div class="ic">🔧</div><h3>ถอดประกอบง่าย</h3><p>เสาร่องสอดแผ่นอะคริลิก ฝาแม่เหล็ก ตลับกล้องสไลด์ เสียบคอนเนคเตอร์ ไม่มีสายลอย</p></div>
-<div class="card feat"><div class="ic">🎯</div><h3>หยุดแม่นด้วยเอนโค้ดเดอร์</h3><p>มอเตอร์ DC เกียร์ฉาก + Cytron MD13S ลูปตำแหน่ง 1 kHz บน ESP32</p></div>
+<div class="card feat"><div class="ic">🎯</div><h3>หยุดแม่นด้วยเอนโค้ดเดอร์</h3><p>มอเตอร์ DC เกียร์ฉาก + BTS7960 (IBT-2) ลูปตำแหน่ง 1 kHz บน ESP32</p></div>
 <div class="card feat"><div class="ic">💸</div><h3>งบประหยัด</h3><p>อะคริลิกแผ่นเต็มตัดเอง ชิ้นส่วนพิมพ์เอง ไม่กัด PCB ใช้บอร์ดสำเร็จรูป</p></div></div></div></section>
 
 <section><div class="wrap"><h2>ภาพจากแบบ</h2><p class="sub">เรนเดอร์จาก Fusion 360</p><div class="grid">
@@ -86,7 +86,7 @@ page('how.html', 'หลักการทำงาน', '''
 <li><b>สรุปผล</b> สถานะ ok / watch / alarm (กฎเริ่มต้น ต้องปรับเทียบ) บันทึก CSV และภาพ annotated แล้วปล่อยถาดออก</li></ol>
 <h2 style="margin-top:44px">ฮาร์ดแวร์ → ขา ESP32</h2><div class="tw"><table>
 <tr><th>ขา</th><th>ใช้ทำ</th><th>หมายเหตุ</th></tr>
-<tr><td>26 / 27</td><td>Cytron MD13S PWM / DIR</td><td>PWM 20 kHz</td></tr><tr><td>13 / 14</td><td>Encoder A / B</td><td>จ่ายไฟ encoder 3.3 V</td></tr>
+<tr><td>26 / 27</td><td>BTS7960 RPWM / LPWM</td><td>PWM 20 kHz</td></tr><tr><td>13 / 14</td><td>Encoder A / B</td><td>จ่ายไฟ encoder 3.3 V</td></tr>
 <tr><td>34</td><td>โฟโต้เซนเซอร์</td><td>NPN + pull-up 10k</td></tr><tr><td>32</td><td>ปุ่ม START</td><td>ต่อลง GND</td></tr><tr><td>33</td><td>ESTOP_OK</td><td>อ่านราง 12 V ผ่านตัวแบ่งแรงดัน</td></tr>
 <tr><td>16 / 17 / 18</td><td>MOSFET ไฟ ขาว / NIR / UV</td><td>PWM 5 kHz</td></tr><tr><td>21 / 22</td><td>I²C: AS7341 + MLX90614</td><td></td></tr><tr><td>35</td><td>MQ-137 (AO)</td><td>ต้องมีตัวแบ่ง 10k/20k</td></tr></table></div>
 <p class="sub" style="margin-top:14px">E-stop ตัดไฟ 12 V แบบฮาร์ดแวร์เท่านั้น ไม่ใช่ฟังก์ชันความปลอดภัยที่รับรอง ไฟบ้านอยู่ในกล่อง A เท่านั้น ให้ช่างไฟตรวจ</p>
