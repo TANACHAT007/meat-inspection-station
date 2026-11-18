@@ -2,7 +2,7 @@
 import csv, html, json, os
 H = os.path.dirname(os.path.abspath(__file__))
 E = html.escape
-NAV = [('index.html', 'เครื่อง'), ('model.html', 'โมเดล 3 มิติ'), ('sim.html', 'จำลองการทำงาน'), ('how.html', 'การทำงาน'), ('build.html', 'สร้างเอง'), ('assembly.html', 'ประกอบ'), ('learn.html', 'งานวิจัย'), ('judges.html', 'สำหรับกรรมการ')]
+NAV = [('index.html', 'เครื่อง'), ('model.html', 'โมเดล 3 มิติ'), ('sim.html', 'จำลองการทำงาน'), ('how.html', 'การทำงาน'), ('build.html', 'สร้างเอง'), ('assembly.html', 'ประกอบ'), ('wiring.html', 'วงจร'), ('learn.html', 'งานวิจัย'), ('judges.html', 'สำหรับกรรมการ')]
 def page(fn, title, body, desc='', extra_head='', script=''):
     links = ''.join(f'<a href="{h}">{t}</a>' for h, t in NAV)
     out = f'''<!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -222,3 +222,18 @@ page('assembly.html', 'คู่มือประกอบ — สถานี�
 <div class="vid" style="margin:0 auto 24px;max-width:340px"><video controls playsinline preload="metadata" poster="img/assembly/poster.jpg"><source src="assembly_clip.mp4" type="video/mp4"></video></div>
 {steps_html}
 <p class="sub">ทีมผู้จัดทำ: นายก้องภพ วาทปราชญ์ · นายปรัชกรณ์ ภิมุกภักดี · นายประกฤษฎิ์ ศรีเบญจบุตร (ม.5/2) · ครูที่ปรึกษา ครูสายสุดา เรืองซา</p></div></section>''', 'คู่มือประกอบสถานีตรวจคุณภาพเนื้อ 12 ขั้นตอน พร้อมภาพและคลิป')
+
+
+# ---------------------------------------------------------------- wiring page
+sheets = [('01_power', 'หน้า 1 ไฟเข้าเครื่องและไฟ 12 V', 'ช่องรับไฟ C14 → แหล่งจ่าย 12 V → ปุ่มหยุดฉุกเฉิน → บัค 5 V · ไฟบ้านต้องให้ครูหรือช่างไฟตรวจก่อนเสียบปลั๊ก'),
+          ('02_motor', 'หน้า 2 มอเตอร์และตัวขับ BTS7960', 'ESP32 สั่ง PWM เข้า BTS7960 ขับมอเตอร์ JGY370 และอ่านเอนโค้ดเดอร์ (ใช้ 3.3 V เท่านั้น)'),
+          ('03_inputs', 'หน้า 3 เซนเซอร์ตรวจถาด ปุ่ม START และ ESTOP_OK', 'ตัวแบ่งแรงดัน 100 kΩ / 33 kΩ ทำให้ขา GPIO33 ได้ ≈ 3.0 V ไม่เกินพิกัด'),
+          ('04_lights', 'หน้า 4 ไฟ LED ผ่านโมดูล MOSFET', 'ไฟขาวชุดหลัก · NIR/UV เป็นชุด Plus'),
+          ('05_sensors', 'หน้า 5 เซนเซอร์ I²C แก๊ส และบัซเซอร์', 'AS7341 + MLX90614 ใช้ SDA/SCL ร่วมกัน · MQ-137 ผ่านตัวแบ่งแรงดัน')]
+cards = ''.join(f'<div class="card" style="margin:0 0 20px"><a href="img/wiring/{k}.jpg"><img src="img/wiring/{k}.jpg" alt="{E(t)}" loading="lazy"></a><div class="b"><h3>{E(t)}</h3><p>{E(d)}</p></div></div>' for k, t, d in sheets)
+page('wiring.html', 'ภาพต่อวงจร — สถานีตรวจเนื้อ', f'''
+<section style="padding-top:30px"><div class="wrap"><h2>ภาพต่อวงจร</h2>
+<p class="sub">ภาพแบบบอร์ดจริง สายสี และเลขกำกับสาย 5 หน้า จาก firmware (ขา GPIO ตาม <code>08_firmware/README.md</code>)</p>
+<div class="note" style="margin-bottom:18px"><b>ข้อควรระวัง</b> ร่างจาก firmware <b>ยังไม่ผ่านการตรวจโดยช่างไฟ</b> ห้ามต่อไฟบ้านจนกว่าครูตรวจ · สีสายและชื่อขาของมอเตอร์ โมดูล MOSFET AS7341 MQ-137 และ PSU เป็นค่าทั่วไป ต้องเทียบกับป้ายบนของจริงก่อนต่อ · ยังไม่ได้ทดสอบกับของจริง</div>
+<div class="row" style="margin-bottom:18px"><a class="btn go" href="downloads/wiring_diagrams.pdf">⬇ ภาพต่อวงจร (PDF 5 หน้า)</a><a class="btn ghost" href="downloads/wire_list.md">⬇ รายการสาย (wire list)</a></div>
+{cards}</div></section>''', 'ภาพต่อวงจรสถานีตรวจคุณภาพเนื้อ 5 หน้า พร้อมรายการสาย')
