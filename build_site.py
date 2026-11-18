@@ -2,7 +2,7 @@
 import csv, html, json, os
 H = os.path.dirname(os.path.abspath(__file__))
 E = html.escape
-NAV = [('index.html', 'เครื่อง'), ('model.html', 'โมเดล 3 มิติ'), ('sim.html', 'จำลองการทำงาน'), ('how.html', 'การทำงาน'), ('build.html', 'สร้างเอง'), ('learn.html', 'งานวิจัย'), ('judges.html', 'สำหรับกรรมการ')]
+NAV = [('index.html', 'เครื่อง'), ('model.html', 'โมเดล 3 มิติ'), ('sim.html', 'จำลองการทำงาน'), ('how.html', 'การทำงาน'), ('build.html', 'สร้างเอง'), ('assembly.html', 'ประกอบ'), ('learn.html', 'งานวิจัย'), ('judges.html', 'สำหรับกรรมการ')]
 def page(fn, title, body, desc='', extra_head='', script=''):
     links = ''.join(f'<a href="{h}">{t}</a>' for h, t in NAV)
     out = f'''<!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -13,7 +13,7 @@ def page(fn, title, body, desc='', extra_head='', script=''):
 <nav><div class="wrap"><a class="brand" href="index.html"><span class="logo">🥩</span>Meat Inspection Station</a>
 <div class="links" id="links">{links}<button class="tbtn" id="tbtn" aria-label="สลับโหมดมืด">◐</button></div><button class="mbtn" id="mbtn" aria-label="เมนู">☰</button></div></nav>
 {body}
-<footer><div class="wrap">โครงงานสถานีตรวจคุณภาพเนื้อวัวบนสายพาน · ออกแบบด้วย Fusion 360 · ภาพและโมเดล 3 มิติสร้างจากแบบ CAD ไม่ใช่ภาพถ่ายของจริง · ข้อมูลอัปเดต 5 พ.ย. 2569 · <a href="judges.html#limits" style="text-decoration:underline">ข้อจำกัด</a></div></footer>{script}</body></html>'''
+<footer><div class="wrap">โครงงานสถานีตรวจคุณภาพเนื้อวัวบนสายพาน · ออกแบบด้วย Fusion 360 · ภาพและโมเดล 3 มิติสร้างจากแบบ CAD ไม่ใช่ภาพถ่ายของจริง · ข้อมูลอัปเดต 18 พ.ย. 2569 · <a href="judges.html#limits" style="text-decoration:underline">ข้อจำกัด</a></div></footer>{script}</body></html>'''
     open(os.path.join(H, fn), 'w', encoding='utf-8').write(out)
 
 IMP = '<script type="importmap">{"imports":{"three":"./vendor/three.module.min.js"}}</script>'
@@ -119,7 +119,7 @@ page('build.html', 'สร้างเอง — BOM และไฟล์', f''
 <h2 style="margin-top:46px">รายการอุปกรณ์ (BOM)</h2><p class="sub">ราคาเป็นราคาประมาณ ไม่ใช่ใบเสนอราคา (ยืนยันแล้วเฉพาะเว็บแคม C270 และเส้นพลาสติก 350 บาท/ม้วน) ลิงก์เป็นหน้าค้นหา</p>
 <div class="kpi" style="margin-bottom:16px"><div><b>≈ {tot.get("core",0):,.0f}</b><span>บาท แกนหลัก (core) · ≈ 6,070 ถ้ามีเครื่องมือตัดเจาะแล้ว</span></div><div><b>+ {tot.get("plus",0):,.0f}</b><span>บาท ชุด Plus</span></div><div><b>+ {tot.get("sort",0):,.0f}</b><span>บาท โมดูลคัดแยก (ออปชัน)</span></div></div>
 <div class="tw"><table><tr><th>#</th><th>ชุด</th><th>กลุ่ม</th><th>รายการ</th><th>จำนวน</th><th>ราคา/หน่วย</th><th>รวม</th><th></th></tr>{trs}</table></div>
-<p class="sub" style="margin-top:12px">ผลรวมแกนหลักยังเกินเป้า 6,000 บาทเล็กน้อย สายพานสั่งทำและโปรไฟล์ต้องขอราคาจริง</p></div></section>''', 'BOM ไฟล์พิมพ์ DXF และวิธีสร้างสถานีตรวจเนื้อ')
+<p class="sub" style="margin-top:12px">ตารางนี้เป็นราคาประมาณตอนออกแบบ ส่วนที่สั่งจริง ณ 17 พ.ย. 2569 รวมประมาณ 6,400–6,700 บาท (รวมเซนเซอร์ Plus ≈ 1,100) ดูรายการจริงใน <a href="downloads/lists_buy_and_print.pdf">PDF รายการอุปกรณ์และพาร์ทพิมพ์</a> · ที่ซื้อต่างจากแบบ: ขาโปรไฟล์ตัดจาก 100 เหลือ 86 มม. · LED 4000 K · heat-set M4 ยาว 6 มม.</p></div></section>''', 'BOM ไฟล์พิมพ์ DXF และวิธีสร้างสถานีตรวจเนื้อ')
 
 # ---------------------------------------------------------------- learn
 page('learn.html', 'งานวิจัยที่ใช้ — ตรวจคุณภาพเนื้อ', '''
@@ -154,7 +154,7 @@ page('judges.html', 'สำหรับกรรมการ', '''
 <details><summary>ตรวจความสดหรือความปลอดภัยของอาหารได้ไหม</summary><p>ไม่รับรอง เครื่องรายงานสัญญาณช่วยคัดกรอง (สี อุณหภูมิผิว ก๊าซ ฟิล์มสี) งานวิจัยชี้ว่าการทำนาย pH จากภาพทำได้ไม่ดี จึงไม่รายงาน pH</p></details>
 <details><summary>ทำไมขนาดแพ็กเล็ก</summary><p>มุมมองกล้อง 16:9 ตามแนวสายพานราว 74 มม. ชิ้นเนื้อควรไม่เกิน ~65 มม. ถ้าใหญ่กว่า โปรแกรมจะติดธง clipped_by_frame</p></details>
 <details><summary>ความปลอดภัยทางไฟฟ้า</summary><p>ไฟบ้านเข้าทางช่อง C14 ที่มีฟิวส์และสวิตช์ อยู่ในกล่อง A เท่านั้น ส่วนอื่นเป็น 12 V และ 5 V ต้องให้ช่างไฟตรวจงานเดินสาย E-stop เป็นการตัดไฟฮาร์ดแวร์ ไม่ใช่ระบบความปลอดภัยที่รับรอง</p></details>
-<details><summary>งบประมาณจริงเท่าไร</summary><p>แกนหลักประมาณ 6,300 บาท (≈ 6,070 ถ้ามีเครื่องมืออยู่แล้ว) เป็นราคาประมาณ สายพานสั่งทำและโปรไฟล์ยังไม่ได้ขอราคาจริง ดูตารางที่หน้า "สร้างเอง"</p></details>
+<details><summary>งบประมาณจริงเท่าไร</summary><p>ที่สั่งจริงรวมประมาณ 6,400–6,700 บาท (รวมเซนเซอร์ Plus ≈ 1,100 บาท) ไม่รวมค่าสายพานสั่งทำและค่าตัดเลเซอร์ที่ยังไม่ทราบราคาจริง เป็นราคาในตะกร้า ไม่ใช่ใบเสร็จ ดูหน้า "สร้างเอง"</p></details>
 <h2 id="limits" style="margin-top:40px">ข้อจำกัดที่ต้องรู้</h2>
 <div class="note"><p><b>ภาพและโมเดล 3 มิติ</b> สร้างจากแบบ CAD ไม่ใช่เครื่องจริง</p><p><b>ส่วนประกอบทั่วไป</b> E-stop ช่อง C14 PSU ไดรเวอร์ มอเตอร์ ใช้ขนาดจากข้อมูลผู้ขายหรือรูปทรงมาตรฐาน ต้องวัดของจริงก่อนพิมพ์ขายึดและเจาะ</p><p><b>ยังไม่ได้ทดสอบ</b> PID ต้องจูน ปรับเทียบ counts/มม. ตั้งโฟกัสกล้องที่ ~15 ซม. เว็บแคมส่วนใหญ่มีฟิลเตอร์ตัด IR ทำให้แถบ NIR 850 มืด ต้องใช้กล้องที่ไม่มี IR-cut</p><p><b>เสียงพากย์ในคลิป</b> เป็นเสียงสังเคราะห์</p></div>
 </div></section>''', 'สรุปโครงงานสำหรับกรรมการ: สิ่งที่ทำแล้ว ความแม่นยำ และข้อจำกัด')
@@ -201,3 +201,24 @@ stp.querySelectorAll(".sl").forEach((e,i)=>{e.style.background=i===ph?"var(--pan
 requestAnimationFrame(step);}).catch(()=>ld.textContent="โหลดโมเดลไม่ได้ ลองรีเฟรช")</script>""")
 
 print('pages ok')
+
+
+# ---------------------------------------------------------------- assembly guide page (from 10_manual/assembly/assembly_guide.md)
+import re
+md = open(os.path.join(H, '..', '10_manual', 'assembly', 'assembly_guide.md'), encoding='utf-8').read()
+steps_html = ''
+for m in re.finditer(r'### ขั้นที่ (\d+) (.+?)\n\n!\[[^\]]*\]\(img/s(\d+)\.png\)\n\n(.*?)(?=\n### ขั้นที่|\n---|\Z)', md, re.S):
+    n, title, im, rest = m.groups()
+    items = re.findall(r'^\d+\. (.+)$', rest, re.M); chk = re.search(r'\*\*ตรวจ:\*\* (.+)', rest)
+    conv = lambda t: re.sub(r'\*\*(.+?)\*\*', r'<b>\1</b>', E(t).replace('&#x27;', "'")).replace('`', '')
+    li = ''.join(f'<li>{conv(i)}</li>' for i in items)
+    steps_html += f'<div class="card acard" style="margin:0 0 18px"><img src="img/assembly/s{im}.jpg" alt="ขั้นที่ {n}" loading="lazy"><div class="b"><h3>ขั้นที่ {n} {E(title)}</h3><ol class="steps">{li}</ol>' + (f'<p class="note"><b>ตรวจ:</b> {conv(chk.group(1))}</p>' if chk else '') + '</div></div>'
+page('assembly.html', 'คู่มือประกอบ — สถานีตรวจเนื้อ', f'''
+<style>.acard{{display:grid;grid-template-columns:1.1fr 1fr;align-items:center}}.acard img{{width:100%;height:100%;max-height:360px;object-fit:contain;background:#fff}}@media(max-width:760px){{.acard{{grid-template-columns:1fr}}}}</style>
+<section style="padding-top:30px"><div class="wrap"><h2>คู่มือประกอบ 12 ขั้นตอน</h2>
+<p class="sub">ภาพส้ม = ชิ้นที่เพิ่มในขั้นนั้น ภาพเป็นเรนเดอร์จากไฟล์ STEP (ผนังอุโมงค์/กล่องในภาพเป็นอะคริลิกใส แต่ของจริงพิมพ์ทึบ) ลำดับนี้ร่างจากแบบ <b>ยังไม่เคยประกอบจริง</b></p>
+<div class="note" style="margin-bottom:18px"><b>ความปลอดภัย</b> หัวแร้งฝังเกลียวใช้เมื่อมีครูดูแล · ไฟบ้านเข้าช่อง C14 กล่องซ้ายเท่านั้น ให้ครูหรือช่างไฟตรวจก่อนเสียบปลั๊ก (ยังไม่มีแผนผังสายไฟที่ช่างไฟตรวจแล้ว) · ห้ามเสียบ/ถอดสายมอเตอร์ตอนมีไฟ · ห้ามมองไฟ IR/UV ตรง ๆ</div>
+<div class="row" style="margin-bottom:18px"><a class="btn go" href="downloads/assembly_guide.pdf">⬇ คู่มือประกอบ (PDF)</a><a class="btn ghost" href="downloads/cad_parts_sheet.pdf">⬇ ภาพ CAD ชิ้นพิมพ์ (A4 1 หน้า)</a><a class="btn ghost" href="downloads/lists_buy_and_print.pdf">⬇ รายการอุปกรณ์ + พาร์ทพิมพ์ (PDF)</a></div>
+<div class="vid" style="margin:0 auto 24px;max-width:340px"><video controls playsinline preload="metadata" poster="img/assembly/poster.jpg"><source src="assembly_clip.mp4" type="video/mp4"></video></div>
+{steps_html}
+<p class="sub">ทีมผู้จัดทำ: นายก้องภพ วาทปราชญ์ · นายปรัชกรณ์ ภิมุกภักดี · นายประกฤษฎิ์ ศรีเบญจบุตร (ม.5/2) · ครูที่ปรึกษา ครูสายสุดา เรืองซา</p></div></section>''', 'คู่มือประกอบสถานีตรวจคุณภาพเนื้อ 12 ขั้นตอน พร้อมภาพและคลิป')

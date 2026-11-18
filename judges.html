@@ -4,7 +4,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="site.css"><script src="site.js"></script></head><body>
 <nav><div class="wrap"><a class="brand" href="index.html"><span class="logo">🥩</span>Meat Inspection Station</a>
-<div class="links" id="links"><a href="index.html">เครื่อง</a><a href="model.html">โมเดล 3 มิติ</a><a href="sim.html">จำลองการทำงาน</a><a href="how.html">การทำงาน</a><a href="build.html">สร้างเอง</a><a href="learn.html">งานวิจัย</a><a href="judges.html">สำหรับกรรมการ</a><button class="tbtn" id="tbtn" aria-label="สลับโหมดมืด">◐</button></div><button class="mbtn" id="mbtn" aria-label="เมนู">☰</button></div></nav>
+<div class="links" id="links"><a href="index.html">เครื่อง</a><a href="model.html">โมเดล 3 มิติ</a><a href="sim.html">จำลองการทำงาน</a><a href="how.html">การทำงาน</a><a href="build.html">สร้างเอง</a><a href="assembly.html">ประกอบ</a><a href="learn.html">งานวิจัย</a><a href="judges.html">สำหรับกรรมการ</a><button class="tbtn" id="tbtn" aria-label="สลับโหมดมืด">◐</button></div><button class="mbtn" id="mbtn" aria-label="เมนู">☰</button></div></nav>
 
 <section style="padding-top:30px"><div class="wrap"><h2>สำหรับกรรมการ</h2><p class="sub">สรุปว่าโครงงานทำอะไร อะไรทำเสร็จแล้ว และอะไรยังไม่ได้พิสูจน์</p>
 <div class="kpi"><div><b>ออกแบบแล้ว</b><span>CAD ครบ 120 รายการยึด ชนกัน 4 จุดจิ๋ว ≤ 22 มม.³</span></div><div><b>เขียนแล้ว</b><span>firmware + โปรแกรมภาพ ผ่านการทดสอบเชิงโค้ด</span></div><div><b>ยังไม่ได้</b><span>ประกอบ ทดสอบกับของจริง และ validate เกรด</span></div></div>
@@ -14,8 +14,8 @@
 <details><summary>ตรวจความสดหรือความปลอดภัยของอาหารได้ไหม</summary><p>ไม่รับรอง เครื่องรายงานสัญญาณช่วยคัดกรอง (สี อุณหภูมิผิว ก๊าซ ฟิล์มสี) งานวิจัยชี้ว่าการทำนาย pH จากภาพทำได้ไม่ดี จึงไม่รายงาน pH</p></details>
 <details><summary>ทำไมขนาดแพ็กเล็ก</summary><p>มุมมองกล้อง 16:9 ตามแนวสายพานราว 74 มม. ชิ้นเนื้อควรไม่เกิน ~65 มม. ถ้าใหญ่กว่า โปรแกรมจะติดธง clipped_by_frame</p></details>
 <details><summary>ความปลอดภัยทางไฟฟ้า</summary><p>ไฟบ้านเข้าทางช่อง C14 ที่มีฟิวส์และสวิตช์ อยู่ในกล่อง A เท่านั้น ส่วนอื่นเป็น 12 V และ 5 V ต้องให้ช่างไฟตรวจงานเดินสาย E-stop เป็นการตัดไฟฮาร์ดแวร์ ไม่ใช่ระบบความปลอดภัยที่รับรอง</p></details>
-<details><summary>งบประมาณจริงเท่าไร</summary><p>แกนหลักประมาณ 6,300 บาท (≈ 6,070 ถ้ามีเครื่องมืออยู่แล้ว) เป็นราคาประมาณ สายพานสั่งทำและโปรไฟล์ยังไม่ได้ขอราคาจริง ดูตารางที่หน้า "สร้างเอง"</p></details>
+<details><summary>งบประมาณจริงเท่าไร</summary><p>ที่สั่งจริงรวมประมาณ 6,400–6,700 บาท (รวมเซนเซอร์ Plus ≈ 1,100 บาท) ไม่รวมค่าสายพานสั่งทำและค่าตัดเลเซอร์ที่ยังไม่ทราบราคาจริง เป็นราคาในตะกร้า ไม่ใช่ใบเสร็จ ดูหน้า "สร้างเอง"</p></details>
 <h2 id="limits" style="margin-top:40px">ข้อจำกัดที่ต้องรู้</h2>
 <div class="note"><p><b>ภาพและโมเดล 3 มิติ</b> สร้างจากแบบ CAD ไม่ใช่เครื่องจริง</p><p><b>ส่วนประกอบทั่วไป</b> E-stop ช่อง C14 PSU ไดรเวอร์ มอเตอร์ ใช้ขนาดจากข้อมูลผู้ขายหรือรูปทรงมาตรฐาน ต้องวัดของจริงก่อนพิมพ์ขายึดและเจาะ</p><p><b>ยังไม่ได้ทดสอบ</b> PID ต้องจูน ปรับเทียบ counts/มม. ตั้งโฟกัสกล้องที่ ~15 ซม. เว็บแคมส่วนใหญ่มีฟิลเตอร์ตัด IR ทำให้แถบ NIR 850 มืด ต้องใช้กล้องที่ไม่มี IR-cut</p><p><b>เสียงพากย์ในคลิป</b> เป็นเสียงสังเคราะห์</p></div>
 </div></section>
-<footer><div class="wrap">โครงงานสถานีตรวจคุณภาพเนื้อวัวบนสายพาน · ออกแบบด้วย Fusion 360 · ภาพและโมเดล 3 มิติสร้างจากแบบ CAD ไม่ใช่ภาพถ่ายของจริง · ข้อมูลอัปเดต 5 พ.ย. 2569 · <a href="judges.html#limits" style="text-decoration:underline">ข้อจำกัด</a></div></footer></body></html>
+<footer><div class="wrap">โครงงานสถานีตรวจคุณภาพเนื้อวัวบนสายพาน · ออกแบบด้วย Fusion 360 · ภาพและโมเดล 3 มิติสร้างจากแบบ CAD ไม่ใช่ภาพถ่ายของจริง · ข้อมูลอัปเดต 18 พ.ย. 2569 · <a href="judges.html#limits" style="text-decoration:underline">ข้อจำกัด</a></div></footer></body></html>

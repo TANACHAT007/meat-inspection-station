@@ -4,7 +4,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="site.css"><script src="site.js"></script></head><body>
 <nav><div class="wrap"><a class="brand" href="index.html"><span class="logo">🥩</span>Meat Inspection Station</a>
-<div class="links" id="links"><a href="index.html">เครื่อง</a><a href="model.html">โมเดล 3 มิติ</a><a href="sim.html">จำลองการทำงาน</a><a href="how.html">การทำงาน</a><a href="build.html">สร้างเอง</a><a href="learn.html">งานวิจัย</a><a href="judges.html">สำหรับกรรมการ</a><button class="tbtn" id="tbtn" aria-label="สลับโหมดมืด">◐</button></div><button class="mbtn" id="mbtn" aria-label="เมนู">☰</button></div></nav>
+<div class="links" id="links"><a href="index.html">เครื่อง</a><a href="model.html">โมเดล 3 มิติ</a><a href="sim.html">จำลองการทำงาน</a><a href="how.html">การทำงาน</a><a href="build.html">สร้างเอง</a><a href="assembly.html">ประกอบ</a><a href="learn.html">งานวิจัย</a><a href="judges.html">สำหรับกรรมการ</a><button class="tbtn" id="tbtn" aria-label="สลับโหมดมืด">◐</button></div><button class="mbtn" id="mbtn" aria-label="เมนู">☰</button></div></nav>
 
 <section style="padding-top:30px"><div class="wrap"><h2>หลักการทำงาน (stop-and-capture)</h2><p class="sub">ESP32 คุมสายพานด้วยตำแหน่งจากเอนโค้ดเดอร์ ส่วนโปรแกรมบนคอมพิวเตอร์ถ่ายภาพและวิเคราะห์</p>
 <ol class="steps">
@@ -21,4 +21,4 @@
 <tr><td>16 / 17 / 18</td><td>MOSFET ไฟ ขาว / NIR / UV</td><td>PWM 5 kHz</td></tr><tr><td>21 / 22</td><td>I²C: AS7341 + MLX90614</td><td></td></tr><tr><td>35</td><td>MQ-137 (AO)</td><td>ต้องมีตัวแบ่ง 10k/20k</td></tr></table></div>
 <p class="sub" style="margin-top:14px">E-stop ตัดไฟ 12 V แบบฮาร์ดแวร์เท่านั้น ไม่ใช่ฟังก์ชันความปลอดภัยที่รับรอง ไฟบ้านอยู่ในกล่อง A เท่านั้น ให้ช่างไฟตรวจ</p>
 <div class="note ok"><b>สถานะซอฟต์แวร์</b> firmware คอมไพล์ผ่านบน ESP32 core 3.3.12 (ใช้แฟลช 26%) และโปรแกรม Python ผ่าน unit test 5 ข้อบนภาพสังเคราะห์ <b>ยังไม่ได้ทดสอบกับฮาร์ดแวร์จริง</b></div></div></section>
-<footer><div class="wrap">โครงงานสถานีตรวจคุณภาพเนื้อวัวบนสายพาน · ออกแบบด้วย Fusion 360 · ภาพและโมเดล 3 มิติสร้างจากแบบ CAD ไม่ใช่ภาพถ่ายของจริง · ข้อมูลอัปเดต 5 พ.ย. 2569 · <a href="judges.html#limits" style="text-decoration:underline">ข้อจำกัด</a></div></footer></body></html>
+<footer><div class="wrap">โครงงานสถานีตรวจคุณภาพเนื้อวัวบนสายพาน · ออกแบบด้วย Fusion 360 · ภาพและโมเดล 3 มิติสร้างจากแบบ CAD ไม่ใช่ภาพถ่ายของจริง · ข้อมูลอัปเดต 18 พ.ย. 2569 · <a href="judges.html#limits" style="text-decoration:underline">ข้อจำกัด</a></div></footer></body></html>
