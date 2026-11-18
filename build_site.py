@@ -230,7 +230,7 @@ sheets = [('01_power', 'หน้า 1 ไฟเข้าเครื่อง�
           ('03_inputs', 'หน้า 3 เซนเซอร์ตรวจถาด ปุ่ม START และ ESTOP_OK', 'ตัวแบ่งแรงดัน 100 kΩ / 33 kΩ ทำให้ขา GPIO33 ได้ ≈ 3.0 V ไม่เกินพิกัด'),
           ('04_lights', 'หน้า 4 ไฟ LED ผ่านโมดูล MOSFET', 'ไฟขาวชุดหลัก · NIR/UV เป็นชุด Plus'),
           ('05_sensors', 'หน้า 5 เซนเซอร์ I²C แก๊ส และบัซเซอร์', 'AS7341 + MLX90614 ใช้ SDA/SCL ร่วมกัน · MQ-137 ผ่านตัวแบ่งแรงดัน')]
-cards = ''.join(f'<div class="card" style="margin:0 0 20px"><a href="img/wiring/{k}.jpg"><img src="img/wiring/{k}.jpg" alt="{E(t)}" loading="lazy"></a><div class="b"><h3>{E(t)}</h3><p>{E(d)}</p></div></div>' for k, t, d in sheets)
+cards = ''.join(f'<div class="card" style="margin:0 0 20px"><a href="img/wiring/{k}.jpg"><img src="img/wiring/{k}.jpg" alt="{E(t)}" loading="lazy" style="width:100%;height:auto;max-height:none;object-fit:contain;aspect-ratio:auto"></a><div class="b"><h3>{E(t)}</h3><p>{E(d)}</p></div></div>' for k, t, d in sheets)
 page('wiring.html', 'ภาพต่อวงจร — สถานีตรวจเนื้อ', f'''
 <section style="padding-top:30px"><div class="wrap"><h2>ภาพต่อวงจร</h2>
 <p class="sub">ภาพแบบบอร์ดจริง สายสี และเลขกำกับสาย 5 หน้า จาก firmware (ขา GPIO ตาม <code>08_firmware/README.md</code>)</p>
